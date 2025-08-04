@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RetroFlicks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>🎬 Welcome to RetroFlicks</h1>
+
+    <section class="form-section">
+        <h2>Add a New Movie</h2>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.title.label }}<br>
+                {{ form.title(size=40) }}
+            </div>
+            <div>
+                {{ form.year.label }}<br>
+                {{ form.year() }}
+            </div>
+            <div>
+                {{ form.genre.label }}<br>
+                {{ form.genre(size=30) }}
+            </div>
+            <div>
+                {{ form.synopsis.label }}<br>
+                {{ form.synopsis(rows=3, cols=40) }}
+            </div>
+            <div>
+                {{ form.poster_url.label }}<br>
+                {{ form.poster_url(size=60) }}
+            </div>
+            <div>
+                {{ form.video_url.label }}<br>
+                {{ form.video_url(size=60) }}
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+    </section>
+
+    <section class="movie-grid">
+        {% for movie in movies %}
+            <div class="movie-card">
+                <img src="{{ movie.poster_url }}" alt="{{ movie.title }} poster">
+                <h2>{{ movie.title }} ({{ movie.year }})</h2>
+                <p><strong>Genre:</strong> {{ movie.genre }}</p>
+                <p>{{ movie.synopsis }}</p>
+                <a href="{{ movie.video_url }}" target="_blank">📽️ Watch Now</a>
+            </div>
+        {% endfor %}
+    </section>
+</body>
+</html>
+
