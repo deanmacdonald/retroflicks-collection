@@ -1,15 +1,29 @@
-# routes.py
-from flask import Blueprint, render_template
-from .models import Movie
+from flask import Blueprint, render_template, request
+from app.models import Movie
+from app.forms import MovieSearchForm
+from app import db
 
-# ✅ Create the Blueprint
-routes_bp = Blueprint('routes', __name__)
+bp = Blueprint('main', __name__)
 
-# 🎞️ Home route
-@routes_bp.route('/')
+@bp.route("/", methods=["GET", "POST"])
 def index():
-    # 🔍 Fetch all movies from the database
-    movies = Movie.query.all()
-    # 🎨 Render the homepage with movie data
-    return render_template('index.html', movies=movies)
+    form = MovieSearchForm()
+    query = form.query.data
+    selected_decade = form.decade.data
+    selected_genre = form.genre.data
+
+    # Start with all movies
+    movies_query = Movie.query
+
+    # Apply filters if present
+    if query:
+        movies_query = movies_query.filter(Movie.title.ilike(f"%{query}%"))
+    if selected_decade and selected_decade != "All":
+        movies_query = movies_query.filter_by(decade=selected_decade)
+    if selected_genre and selected_genre != "All":
+        movies_query = movies_query.filter_by(genre=selected_genre)
+
+    movies = movies_query.all()
+
+    return render_template("index.html", form=form, movies=movies)
 

@@ -1,31 +1,21 @@
-# app/__init__.py
-
-import os
 from flask import Flask
-from flask_migrate import Migrate
-from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 
-# 🌿 Load .env variables
-load_dotenv()
-
-# 📦 Internal imports
-from app.extensions import db
-from app.routes import routes_bp
+db = SQLAlchemy()
+csrf = CSRFProtect()
 
 def create_app():
     app = Flask(__name__)
-
-    # 🔧 Configuration
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///movies.db')
+    app.config['SECRET_KEY'] = 'your-secret-key'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///movies.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev')
 
-    # ⚙️ Extensions
     db.init_app(app)
-    migrate = Migrate(app, db)
+    csrf.init_app(app)
 
-    # 🛣️ Routes
-    app.register_blueprint(routes_bp)
+    from app.routes import bp
+    app.register_blueprint(bp)
 
     return app
 

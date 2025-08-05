@@ -1,13 +1,23 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, IntegerField, TextAreaField, SubmitField
-from wtforms.validators import DataRequired, URL
+from wtforms import StringField, SelectField, SubmitField
 
-class MovieForm(FlaskForm):
-    title = StringField("Title", validators=[DataRequired()])
-    year = IntegerField("Year", validators=[DataRequired()])
-    genre = StringField("Genre", validators=[DataRequired()])
-    synopsis = TextAreaField("Synopsis", validators=[DataRequired()])
-    poster_url = StringField("Poster URL", validators=[DataRequired(), URL()])
-    video_url = StringField("Video URL", validators=[DataRequired(), URL()])
-    submit = SubmitField("Add Movie")
+class MovieSearchForm(FlaskForm):
+    query = StringField("Search for a movie")
+    decade = SelectField("Decade", choices=[
+        ("All", "All"),
+        ("1920s", "1920s"),
+        ("1940s", "1940s"),
+        ("1950s", "1950s"),
+        ("1980s", "1980s")
+    ])
+    genre = SelectField("Genre", choices=[
+        ("All", "All"),
+        ("Horror", "Horror"),
+        ("Comedy", "Comedy"),
+        ("Sci-Fi", "Sci-Fi"),
+        ("Musical", "Musical"),
+        ("Thriller", "Thriller"),
+        ("Romance", "Romance")
+    ])
+    submit = SubmitField("🎬 Search")
 
